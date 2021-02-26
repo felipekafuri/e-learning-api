@@ -1,16 +1,9 @@
 import { Router } from 'express'
-import CreateUsersService from '../services/CreateUsersService'
+import { UserController } from '../controllers/UserControllers'
 
 const usersRouter = Router()
+const userController = new UserController()
 
-usersRouter.post('/users', async (req, res) => {
-  const { name, email, password } = req.body
+usersRouter.post('/users', userController.create)
 
-  const createUser = new CreateUsersService()
-
-  const user = await createUser.execute({ email, password, name })
-
-  return res.json(user)
-})
-
-export default usersRouter
+export { usersRouter }

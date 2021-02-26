@@ -1,9 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm'
-import ICreateUserDTO from '../dtos/CreateUsersDTO'
-import User from '../entities/User'
+import { ICreateUserDTO } from '../dtos/CreateUsersDTO'
+import { User } from '../entities/User'
 
 @EntityRepository(User)
-export class UsersRepository extends Repository<User> {
+class UserRepository extends Repository<User> {
   async createUser({ email, password, name }: ICreateUserDTO): Promise<User> {
     const user = this.create({ email, password, name })
 
@@ -13,4 +13,4 @@ export class UsersRepository extends Repository<User> {
   }
 }
 
-export default UsersRepository
+export { UserRepository }
