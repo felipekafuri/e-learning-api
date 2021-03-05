@@ -1,14 +1,13 @@
-import { Request, Response } from 'express'
-import { CreateUserService } from '../services/CreateUserService'
-import * as yup from 'yup'
 import { classToClass } from 'class-transformer'
+import { Request, Response } from 'express'
+import * as yup from 'yup'
+import { AuthenticateUserService } from '../services/AuthenticateUserService'
 
-class UserController {
+class SessionsController {
   async create(request: Request, response: Response): Promise<Response> {
-    const { name, email, password } = request.body
+    const { email, password } = request.body
 
     const scheme = yup.object().shape({
-      name: yup.string().required('Name is required'),
       email: yup.string().email().required('E-mail is required'),
       password: yup
         .string()
@@ -21,12 +20,12 @@ class UserController {
       return response.status(400).json({ errors: err.errors })
     }
 
-    const createUser = new CreateUserService()
+    const authenticateUser = new AuthenticateUserService()
 
-    const user = await createUser.execute({ email, password, name })
+    const { token, user } = await authenticateUser.execute({ email, password })
 
-    return response.json(classToClass(user))
+    return response.json(classToClass({ user, token }))
   }
 }
 
-export { UserController }
+export { SessionsController }
